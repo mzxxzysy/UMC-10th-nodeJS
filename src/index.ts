@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
+import { handleAddStore } from "./modules/stores/controllers/store.controller.js";
 
 // 1. 환경 변수 설정
 dotenv.config();
@@ -20,7 +21,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World! This is TypeScript Server!");
 });
 
-app.post("/api/v1/users/signup", handleUserSignUp);
+app.post("/api/v1/users/signup", handleUserSignUp); // 회원가입
+app.post("/api/v1/stores/addstore", handleAddStore); // 특정 지역에 가게 추가하기
 
 // 4. 서버 시작
 app.listen(port, () => {
