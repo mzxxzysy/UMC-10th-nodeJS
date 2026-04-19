@@ -4,6 +4,7 @@ import cors from "cors";
 import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
 import { handleAddStore } from "./modules/stores/controllers/store.controller.js";
 import { handleAddReview } from "./modules/reviews/controllers/review.controller.js";
+import { handleAddMission } from "./modules/missions/controllers/mission.controller.js";
 
 // 1. 환경 변수 설정
 dotenv.config();
@@ -24,7 +25,8 @@ app.get("/", (req: Request, res: Response) => {
 
 app.post("/api/v1/users/signup", handleUserSignUp); // 회원가입
 app.post("/api/v1/stores", handleAddStore); // 특정 지역에 가게 추가하기
-app.post("/api/v1/reviews", handleAddReview); //가게에 리뷰 추가하기
+app.post("/api/v1/reviews", handleAddReview); // 가게에 리뷰 추가하기
+app.post("/api/v1/missions", handleAddMission); // 가게에 미션 추가하기
 
 // 4. 서버 시작
 app.listen(port, () => {
