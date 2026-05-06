@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model food_category {
+  id            BigInt          @id @default(autoincrement())
+  name          String?         @db.VarChar(15)
+  Column4       String?         @db.VarChar(15)
+  member_prefer member_prefer[]
+}
+
+model member {
+  id             BigInt           @id @default(autoincrement())
+  name           String?          @db.VarChar(20)
+  gender         String?          @db.VarChar(10)
+  age            Int?
+  address        String?          @db.VarChar(40)
+  spec_address   String?          @db.VarChar(40)
+  phone_num      String?          @db.VarChar(13)
+  status         String?          @db.VarChar(15)
+  inactive_date  DateTime?        @db.DateTime(6)
+  social_type    String?          @db.VarChar(10)
+  created_at     DateTime?        @db.DateTime(6)
+  updated_at     DateTime?        @db.DateTime(6)
+  email          String?          @db.VarChar(50)
+  point          Int?
+  member_agree   member_agree[]
+  member_mission member_mission[]
+  member_prefer  member_prefer[]
+  review         review[]
+}
+
+model member_agree {
+  id         BigInt    @id @default(autoincrement())
+  member_id  BigInt?
+  terms_id   BigInt?
+  created_at DateTime? @db.DateTime(6)
+  updated_at DateTime? @db.DateTime(6)
+  member     member?   @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_agree_ibfk_1")
+  terms      terms?    @relation(fields: [terms_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_agree_ibfk_2")
+
+  @@index([member_id], map: "member_id")
+  @@index([terms_id], map: "terms_id")
+}
+
+model member_mission {
+  id         BigInt    @id @default(autoincrement())
+  member_id  BigInt?
+  mission_id BigInt?
+  status     String?   @db.VarChar(15)
+  created_at DateTime? @db.DateTime(6)
+  updated_at DateTime? @db.DateTime(6)
+  member     member?   @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_mission_ibfk_1")
+  mission    mission?  @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_mission_ibfk_2")
+
+  @@index([member_id], map: "member_id")
+  @@index([mission_id], map: "mission_id")
+}
+
+model member_prefer {
+  id            BigInt         @id @default(autoincrement())
+  member_id     BigInt?
+  category_id   BigInt?
+  created_at    DateTime?      @db.DateTime(6)
+  updated_at    DateTime?      @db.DateTime(6)
+  member        member?        @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_prefer_ibfk_1")
+  food_category food_category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "member_prefer_ibfk_2")
+
+  @@index([category_id], map: "category_id")
+  @@index([member_id], map: "member_id")
+}
+
+model mission {
+  id             BigInt           @id @default(autoincrement())
+  store_id       BigInt?
+  reward         Int?
+  deadline       DateTime?        @db.DateTime(0)
+  mission_spec   String?          @db.Text
+  created_at     DateTime?        @db.DateTime(6)
+  updated_at     DateTime?        @db.DateTime(6)
+  member_mission member_mission[]
+  store          store?           @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "mission_ibfk_1")
+
+  @@index([store_id], map: "store_id")
+}
+
+model region {
+  id         BigInt    @id @default(autoincrement())
+  name       String?   @db.VarChar(20)
+  created_at DateTime? @db.DateTime(6)
+  updated_at DateTime? @db.DateTime(6)
+  store      store[]
+}
+
+model review {
+  id           BigInt         @id @default(autoincrement())
+  member_id    BigInt?
+  store_id     BigInt?
+  body         String?        @db.Text
+  score        Float?         @db.Float
+  created_at   DateTime?      @db.DateTime(6)
+  member       member?        @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
+  store        store?         @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_2")
+  review_image review_image[]
+
+  @@index([member_id], map: "member_id")
+  @@index([store_id], map: "store_id")
+}
+
+model review_image {
+  id         BigInt    @id @default(autoincrement())
+  review_id  BigInt?
+  store_id   BigInt?
+  image_url  String?   @db.Text
+  created_at DateTime? @db.DateTime(6)
+  updated_at DateTime? @db.DateTime(6)
+  review     review?   @relation(fields: [review_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_image_ibfk_1")
+  store      store?    @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_image_ibfk_2")
+
+  @@index([review_id], map: "review_id")
+  @@index([store_id], map: "store_id")
+}
+
+model store {
+  id           BigInt         @id @default(autoincrement())
+  region_id    BigInt?
+  name         String?        @db.VarChar(50)
+  address      String?        @db.VarChar(50)
+  score        Float?         @db.Float
+  created_at   DateTime?      @db.DateTime(6)
+  updated_at   DateTime?      @db.DateTime(6)
+  mission      mission[]
+  review       review[]
+  review_image review_image[]
+  region       region?        @relation(fields: [region_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "store_ibfk_1")
+
+  @@index([region_id], map: "region_id")
+}
+
+model terms {
+  id           BigInt         @id @default(autoincrement())
+  title        String?        @db.VarChar(20)
+  body         String?        @db.Text
+  optional     Boolean?
+  created_at   DateTime?      @db.DateTime(6)
+  updated_at   DateTime?      @db.DateTime(6)
+  member_agree member_agree[]
+}
