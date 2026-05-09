@@ -16,7 +16,16 @@ export const addStoreReview = async (data: IAddReviewRequest) => {
   }
 
   // 등록된 리뷰 조회
-  const review = await getReview(reviewId);
+  const review = await getReview(Number(reviewId));
 
-  return reviewResponse(review);
+  if (!review) {
+    throw new Error("리뷰를 찾을 수 없습니다.");
+  }
+
+  return reviewResponse({
+    memberId: Number(review.memberId),
+    storeId: Number(review.storeId),
+    body: review.body ?? "",
+    score: review.score ?? 0,
+  });
 };
