@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import { listStoreReviews } from "../services/review.service.js";
+import { listStoreReviews } from "../services/storeReview.service.js";
 
 export const handleListStoreReviews = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

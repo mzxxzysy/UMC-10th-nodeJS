@@ -11,6 +11,7 @@ export const userSignUp = async (data: UserSignUpRequest) => {
     address: data.address,
     detailAddress: data.detailAddress,
     phoneNumber: data.phoneNumber,
+    preferences: data.preferences,
   });
 
   if (joinUserId === null) {
@@ -18,11 +19,11 @@ export const userSignUp = async (data: UserSignUpRequest) => {
   }
 
   for (const preference of data.preferences) {
-    await setPreference(joinUserId, preference);
+    await setPreference(Number(joinUserId), preference);
   }
 
-  const user = await getUser(joinUserId);
-  const preferences = await getUserPreferencesByUserId(joinUserId);
+  const user = await getUser(Number(joinUserId));
+  const preferences = await getUserPreferencesByUserId(Number(joinUserId));
 
   return responseFromUser({ user, preferences });
 };

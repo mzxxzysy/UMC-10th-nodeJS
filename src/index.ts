@@ -6,7 +6,7 @@ import { handleAddStore } from "./modules/stores/controllers/store.controller.js
 import { handleAddReview } from "./modules/reviews/controllers/review.controller.js";
 import { handleAddMission } from "./modules/missions/controllers/mission.controller.js";
 import { handleChallengeMission } from "./modules/missions/controllers/challenge.controller.js";
-import { handleListStoreReviews } from "./modules/stores/controllers/review.controller.js";
+import { handleListStoreReviews } from "./modules/stores/controllers/storereview.controller.js";
 
 // 1. 환경 변수 설정
 dotenv.config();
