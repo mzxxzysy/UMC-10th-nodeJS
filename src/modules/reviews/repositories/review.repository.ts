@@ -1,32 +1,27 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { pool } from "../../../db.config.js";
+import { prisma } from "../../../db.config.js";
 
 // 리뷰 작성하기
-export const addReview = async (data: any): Promise<number | null> => {
-  const conn = await pool.getConnection();
+export const addReview = async (data: any) => {
+  // 해당 가게가 있는지 확인
+  const store = await prisma.store.findFirst({ where: { id: data.store_id } });
 
-  try {
-    // 해당 가게가 있는지 확인
-    const [confirm] = await conn.query<RowDataPacket[]>(`select exists(select 1 from store where id = ?) as isExistStore;`, [data.storeId]);
-
-    if (!confirm[0]?.isExistStore) {
-      return null;
-    }
-
-    // 리뷰 작성하기
-    const [result] = await conn.query<ResultSetHeader>(`insert into review (member_id, store_id, body, score) values (?, ?, ?, ?);`, [
-      data.memberId,
-      data.storeId,
-      data.body,
-      data.score,
-    ]);
-
-    return result.insertId;
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
+  if (!store) {
+    return null;
   }
+
+  // 리뷰 작성하기
+  const review = await prisma.review.create({
+    data: {
+      memberId: data.memberId,
+      storeId: data.storeId,
+      body: data.body,
+      score: data.score,
+    },
+  });
+
+  return review.id;
 };
 
 // 리뷰 조회

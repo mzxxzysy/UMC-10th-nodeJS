@@ -100,31 +100,31 @@ model region {
 
 model review {
   id           BigInt         @id @default(autoincrement())
-  member_id    BigInt?
-  store_id     BigInt?
+  memberId     BigInt         @map("member_id")
+  storeId      BigInt         @map("store_id")
   body         String?        @db.Text
   score        Float?         @db.Float
   created_at   DateTime?      @db.DateTime(6)
-  member       member?        @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
-  store        store?         @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_2")
+  member       member?        @relation(fields: [memberId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
+  store        store?         @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_2")
   review_image review_image[]
 
-  @@index([member_id], map: "member_id")
-  @@index([store_id], map: "store_id")
+  @@index([memberId], map: "memberId")
+  @@index([storeId], map: "storeId")
 }
 
 model review_image {
   id         BigInt    @id @default(autoincrement())
-  review_id  BigInt?
-  store_id   BigInt?
+  reviewId  BigInt?   @map("review_id")
+  storeId    BigInt    @map("store_id")
   image_url  String?   @db.Text
   created_at DateTime? @db.DateTime(6)
   updated_at DateTime? @db.DateTime(6)
-  review     review?   @relation(fields: [review_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_image_ibfk_1")
-  store      store?    @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_image_ibfk_2")
+  review     review?   @relation(fields: [reviewId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_image_ibfk_1")
+  store      store?    @relation(fields: [storeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_image_ibfk_2")
 
-  @@index([review_id], map: "review_id")
-  @@index([store_id], map: "store_id")
+  @@index([reviewId], map: "reviewId")
+  @@index([storeId], map: "storeId")
 }
 
 model store {
