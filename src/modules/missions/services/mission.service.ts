@@ -10,7 +10,15 @@ export const addStoreMission = async (data: IAddMissionRequest) => {
     missionSpec: data.missionSpec,
   });
 
-  const mission = await getMission(missionId);
+  const mission = await getMission(Number(missionId));
 
-  return missionResponse(mission);
+  if (!mission) {
+    throw new Error("미션 찾을 수 없습니다.");
+  }
+  return missionResponse({
+    storeId: Number(mission.store_id),
+    reward: Number(mission.reward),
+    deadline: mission.deadline ? mission.deadline.toISOString() : undefined,
+    missionSpec: mission.mission_spec || "",
+  });
 };

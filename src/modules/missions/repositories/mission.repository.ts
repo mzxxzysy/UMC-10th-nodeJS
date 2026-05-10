@@ -1,41 +1,22 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { pool } from "../../../db.config.js";
+import { prisma } from "../../../db.config.js";
 
 // 가게에 미션 추가하기
-export const addMission = async (data: any): Promise<number> => {
-  const conn = await pool.getConnection();
+export const addMission = async (data: any) => {
+  const mission = await prisma.mission.create({
+    data: {
+      store_id: data.storeId,
+      reward: data.reward,
+      deadline: new Date(data.deadline),
+      mission_spec: data.missionSpec,
+    },
+  });
 
-  try {
-    const [result] = await conn.query<ResultSetHeader>(`insert into mission (store_id, reward, deadline, mission_spec)  values (?, ?, ?, ?);`, [
-      data.storeId,
-      data.reward,
-      data.deadline,
-      data.missionSpec,
-    ]);
-
-    return result.insertId;
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
-  }
+  return mission.id;
 };
 
 // 미션 조회
-export const getMission = async (missionId: number): Promise<any | null> => {
-  const conn = await pool.getConnection();
+export const getMission = async (missionId: number) => {
+  const mission = await prisma.mission.findUnique({ where: { id: missionId } });
 
-  try {
-    const [mission] = await conn.query<RowDataPacket[]>(`select * from mission where id = ?;`, [missionId]);
-
-    if (mission.length === 0) {
-      return null;
-    }
-
-    return mission[0];
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
-  }
+  return mission;
 };

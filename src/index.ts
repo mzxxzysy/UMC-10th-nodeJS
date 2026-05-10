@@ -26,9 +26,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/api/v1/users/signup", handleUserSignUp); // 회원가입 o
-app.post("/api/v1/stores", handleAddStore); // 특정 지역에 가게 추가하기
+app.post("/api/v1/stores", handleAddStore); // 특정 지역에 가게 추가하기 o
 app.post("/api/v1/reviews", handleAddReview); // 가게에 리뷰 추가하기 o
-app.post("/api/v1/missions", handleAddMission); // 가게에 미션 추가하기
+app.post("/api/v1/missions", handleAddMission); // 가게에 미션 추가하기 o
 app.post("/api/v1/missions/challenge", handleChallengeMission); // 가게의 미션을 도전 중인 미션에 추가(미션 도전하기)
 app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews); // 가게 리뷰 조회하기 o
 

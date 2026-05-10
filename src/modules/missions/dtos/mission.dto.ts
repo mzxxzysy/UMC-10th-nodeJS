@@ -18,7 +18,7 @@ export const addMissionRequest = (body: IAddMissionRequest) => {
 export interface IMissionResponse {
   storeId: number;
   reward: number;
-  deadline: string;
+  deadline?: string;
   missionSpec: string;
 }
 
@@ -26,7 +26,7 @@ export const missionResponse = (body: IMissionResponse) => {
   return {
     storeId: body.storeId,
     reward: body.reward,
-    deadline: body.deadline,
+    deadline: body.deadline || new Date(),
     missionSpec: body.missionSpec,
   };
 };
