@@ -1,4 +1,4 @@
-import { challengeResponse, IChallengeRequest } from "../dtos/challenge.dto.js";
+import { challengeResponse, IChallengeRequest, MissionStatus } from "../dtos/challenge.dto.js";
 import { challengeMission, getChallenge } from "../repositories/challenge.repository.js";
 
 //미션 도전하기
@@ -14,7 +14,15 @@ export const challengeStoreMission = async (data: IChallengeRequest) => {
   }
 
   // 도전한 미션 조회
-  const mission = await getChallenge(challengeId);
+  const mission = await getChallenge(Number(challengeId));
 
-  return challengeResponse(mission);
+  if (!mission) {
+    throw new Error("미션 찾을 수 없습니다.");
+  }
+
+  return challengeResponse({
+    memberId: Number(mission.member_id),
+    missionId: Number(mission.mission_id),
+    status: MissionStatus.IN_PROGRESS,
+  });
 };
