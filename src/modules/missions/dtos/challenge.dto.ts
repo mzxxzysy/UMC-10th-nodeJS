@@ -69,3 +69,16 @@ export const challengesResponse = (challenges: ChallengeItem[]): IChallengesResp
     },
   };
 };
+
+// 미션 진행 완료
+export interface ICompleteMissionResponse {
+  challengeId: number;
+  status: MissionStatus;
+}
+
+export const completeMissionResponse = (body: ICompleteMissionResponse) => {
+  return {
+    challengeId: body.challengeId,
+    status: body.status,
+  };
+};

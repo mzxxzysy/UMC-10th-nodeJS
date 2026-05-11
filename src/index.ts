@@ -5,7 +5,7 @@ import { handleUserSignUp } from "./modules/users/controllers/user.controller.js
 import { handleAddStore } from "./modules/stores/controllers/store.controller.js";
 import { handleAddReview, handleListMyReviews, handleListStoreReviews } from "./modules/reviews/controllers/review.controller.js";
 import { handleAddMission, handleListStoreMissions } from "./modules/missions/controllers/mission.controller.js";
-import { handleChallengeMission, handleListChallenge } from "./modules/missions/controllers/challenge.controller.js";
+import { handleChallengeMission, handleCompleteMission, handleListChallenge } from "./modules/missions/controllers/challenge.controller.js";
 
 // 1. 환경 변수 설정
 dotenv.config();
@@ -33,6 +33,7 @@ app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews); // 가게 �
 app.get("/api/v1/reviews/:memberId", handleListMyReviews); // 내가 작성한 리뷰 조회하기
 app.get("/api/v1/stores/:storeId/missions", handleListStoreMissions); // 특정 가게의 미션 목록 조회
 app.get("/api/v1/members/:memberId/missions", handleListChallenge); // 내가 진행 중인 미션 목록 조회
+app.patch("/api/v1/members/:missionId", handleCompleteMission); // 내가 진행 중인 미션을 진행 완료로 바꾸기
 
 // 4. 서버 시작
 app.listen(port, () => {

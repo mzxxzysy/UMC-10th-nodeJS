@@ -70,3 +70,23 @@ export const getMyChallenges = async (memberId: number, cursor: number) => {
 
   return challenges;
 };
+
+// 내가 진행 중인 미션을 진행 완료로 바꾸기
+export const updateMissionStatus = async (memberMissionId: number) => {
+  const updated = await prisma.member_mission.update({
+    where: {
+      id: memberMissionId,
+    },
+
+    data: {
+      status: MissionStatus.COMPLETED,
+    },
+
+    select: {
+      id: true,
+      status: true,
+    },
+  });
+
+  return updated;
+};
