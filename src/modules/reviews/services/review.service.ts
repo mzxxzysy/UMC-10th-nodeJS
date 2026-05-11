@@ -1,5 +1,6 @@
+import { responseFromReviews, ReviewListResponse } from "../../stores/dtos/storeReview.dto.js";
 import { IAddReviewRequest, reviewResponse } from "../dtos/review.dto.js";
-import { addReview, getReview } from "../repositories/review.repository.js";
+import { addReview, getMyReviews, getReview } from "../repositories/review.repository.js";
 
 // 리뷰 작성하기
 export const addStoreReview = async (data: IAddReviewRequest) => {
@@ -28,4 +29,16 @@ export const addStoreReview = async (data: IAddReviewRequest) => {
     body: review.body ?? "",
     score: review.score ?? 0,
   });
+};
+
+// 내가 작성한 리뷰 조회
+export const handleMyReviews = async (memberId: number, cursor: number): Promise<ReviewListResponse> => {
+  const reviews = await getMyReviews(memberId, cursor);
+
+  const mapped = reviews.map((r) => ({
+    id: Number(r.id),
+    body: r.body,
+  }));
+
+  return responseFromReviews(mapped);
 };

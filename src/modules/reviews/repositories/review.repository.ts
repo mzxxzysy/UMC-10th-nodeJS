@@ -28,3 +28,27 @@ export const getReview = async (reviewId: number) => {
 
   return review;
 };
+
+// 내가 작성한 리뷰 조회
+export const getMyReviews = async (memberId: number, cursor: number) => {
+  const reviews = await prisma.review.findMany({
+    select: {
+      id: true,
+      body: true,
+      store: true,
+      member: true,
+    },
+    where: {
+      memberId,
+      id: {
+        gt: cursor,
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+    take: 5,
+  });
+
+  return reviews;
+};
