@@ -1,6 +1,5 @@
-import { responseFromReviews, ReviewListResponse } from "../../stores/dtos/storeReview.dto.js";
-import { IAddReviewRequest, reviewResponse } from "../dtos/review.dto.js";
-import { addReview, getMyReviews, getReview } from "../repositories/review.repository.js";
+import { IAddReviewRequest, responseFromReviews, ReviewListResponse, reviewResponse } from "../dtos/review.dto.js";
+import { addReview, getAllStoreReviews, getMyReviews, getReview } from "../repositories/review.repository.js";
 
 // 리뷰 작성하기
 export const addStoreReview = async (data: IAddReviewRequest) => {
@@ -29,6 +28,18 @@ export const addStoreReview = async (data: IAddReviewRequest) => {
     body: review.body ?? "",
     score: review.score ?? 0,
   });
+};
+
+// 가게 리뷰 목록 조회
+export const listStoreReviews = async (storeId: number, cursor: number): Promise<ReviewListResponse> => {
+  const reviews = await getAllStoreReviews(storeId, cursor);
+
+  const mapped = reviews.map((r) => ({
+    id: Number(r.id),
+    body: r.body,
+  }));
+
+  return responseFromReviews(mapped);
 };
 
 // 내가 작성한 리뷰 조회
