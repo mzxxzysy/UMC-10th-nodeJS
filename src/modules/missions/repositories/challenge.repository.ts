@@ -22,9 +22,51 @@ export const challengeMission = async (data: any) => {
   return challenge.id;
 };
 
-// 도전 중인 미션 조회
+// 도전 중인 미션 개별조회
 export const getChallenge = async (challengeId: number) => {
   const challenge = await prisma.member_mission.findUnique({ where: { id: challengeId } });
 
   return challenge;
+};
+
+// 내가 진행 중인 미션 목록 조회
+export const getMyChallenges = async (memberId: number, cursor: number) => {
+  const challenges = await prisma.member_mission.findMany({
+    where: {
+      member_id: memberId,
+      status: "진행중",
+      id: {
+        gt: cursor,
+      },
+    },
+
+    select: {
+      id: true,
+      status: true,
+
+      mission: {
+        select: {
+          id: true,
+          reward: true,
+          deadline: true,
+          mission_spec: true,
+
+          store: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+
+    orderBy: {
+      id: "asc",
+    },
+
+    take: 5,
+  });
+
+  return challenges;
 };

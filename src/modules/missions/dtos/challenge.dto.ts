@@ -32,3 +32,40 @@ export const challengeResponse = (body: IChallengeResponse) => {
     status: body.status,
   };
 };
+
+// 미션 목록 조회
+export interface ChallengeItem {
+  challengeId: number;
+  status: string;
+
+  mission: {
+    missionId: number;
+    reward: number;
+    deadline?: string;
+    missionSpec: string;
+
+    store: {
+      storeId: number;
+      name: string;
+    };
+  };
+}
+
+export interface IChallengesResponse {
+  data: ChallengeItem[];
+  pagination: {
+    cursor: number | null;
+  };
+}
+
+export const challengesResponse = (challenges: ChallengeItem[]): IChallengesResponse => {
+  const lastChallenge = challenges[challenges.length - 1];
+
+  return {
+    data: challenges,
+
+    pagination: {
+      cursor: lastChallenge ? lastChallenge.challengeId : null,
+    },
+  };
+};

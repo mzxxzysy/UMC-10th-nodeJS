@@ -1,5 +1,5 @@
-import { challengeResponse, IChallengeRequest, MissionStatus } from "../dtos/challenge.dto.js";
-import { challengeMission, getChallenge } from "../repositories/challenge.repository.js";
+import { challengeResponse, challengesResponse, IChallengeRequest, MissionStatus } from "../dtos/challenge.dto.js";
+import { challengeMission, getChallenge, getMyChallenges } from "../repositories/challenge.repository.js";
 
 //미션 도전하기
 export const challengeStoreMission = async (data: IChallengeRequest) => {
@@ -25,4 +25,33 @@ export const challengeStoreMission = async (data: IChallengeRequest) => {
     missionId: Number(mission.mission_id),
     status: MissionStatus.IN_PROGRESS,
   });
+};
+
+// 내가 진행 중인 미션 목록 조회
+export const handleMyChallenge = async (memberId: number, cursor: number) => {
+  const challenges = await getMyChallenges(memberId, cursor);
+
+  const mapped = challenges.map((c) => ({
+    challengeId: Number(c.id),
+
+    status: c.status || "",
+
+    mission: {
+      missionId: Number(c.mission?.id),
+
+      reward: c.mission?.reward || 0,
+
+      deadline: c.mission?.deadline?.toISOString(),
+
+      missionSpec: c.mission?.mission_spec || "",
+
+      store: {
+        storeId: Number(c.mission?.store?.id),
+
+        name: c.mission?.store?.name || "",
+      },
+    },
+  }));
+
+  return challengesResponse(mapped);
 };
