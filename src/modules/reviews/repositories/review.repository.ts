@@ -39,7 +39,7 @@ export const getAllStoreReviews = async (store_id: number, cursor: number) => {
       member: true,
     },
     where: {
-      store_id,
+      storeId: store_id,
       id: {
         gt: cursor,
       },
