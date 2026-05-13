@@ -1,49 +1,100 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { pool } from "../../../db.config.js";
+import { prisma } from "../../../db.config.js";
 
 // 리뷰 작성하기
-export const addReview = async (data: any): Promise<number | null> => {
-  const conn = await pool.getConnection();
+export const addReview = async (data: any) => {
+  // 해당 가게가 있는지 확인
+  const store = await prisma.store.findFirst({ where: { id: data.storeId } });
 
-  try {
-    // 해당 가게가 있는지 확인
-    const [confirm] = await conn.query<RowDataPacket[]>(`select exists(select 1 from store where id = ?) as isExistStore;`, [data.storeId]);
-
-    if (!confirm[0]?.isExistStore) {
-      return null;
-    }
-
-    // 리뷰 작성하기
-    const [result] = await conn.query<ResultSetHeader>(`insert into review (member_id, store_id, body, score) values (?, ?, ?, ?);`, [
-      data.memberId,
-      data.storeId,
-      data.body,
-      data.score,
-    ]);
-
-    return result.insertId;
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
+  if (!store) {
+    return null;
   }
+
+  // 리뷰 작성하기
+  const review = await prisma.review.create({
+    data: {
+      memberId: data.memberId,
+      storeId: data.storeId,
+      body: data.body,
+      score: data.score,
+    },
+  });
+
+  return review.id;
 };
 
 // 리뷰 조회
-export const getReview = async (reviewId: number): Promise<any | null> => {
-  const conn = await pool.getConnection();
+export const getReview = async (reviewId: number) => {
+  const review = await prisma.review.findUnique({ where: { id: reviewId } });
 
-  try {
-    const [review] = await conn.query<RowDataPacket[]>(`select * from review where id = ?;`, [reviewId]);
+  return review;
+};
 
-    if (review.length === 0) {
-      return null;
-    }
+// 가게 리뷰 목록 조회
+export const getAllStoreReviews = async (store_id: number, cursor: number) => {
+  const reviews = await prisma.review.findMany({
+    select: {
+      id: true,
+      body: true,
+      score: true,
+      member: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      store: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    where: {
+      storeId: store_id,
+      id: {
+        gt: cursor,
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+    take: 5,
+  });
 
-    return review[0];
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
-  }
+  return reviews;
+};
+
+// 내가 작성한 리뷰 조회
+export const getMyReviews = async (memberId: number, cursor: number) => {
+  const reviews = await prisma.review.findMany({
+    select: {
+      id: true,
+      body: true,
+      score: true,
+      member: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      store: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    where: {
+      memberId,
+      id: {
+        gt: cursor,
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+    take: 5,
+  });
+
+  return reviews;
 };

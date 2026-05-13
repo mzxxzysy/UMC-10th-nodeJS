@@ -31,3 +31,30 @@ export const reviewResponse = (body: IReviewResponse) => {
     score: body.score,
   };
 };
+
+// 리뷰 목록 조회
+export interface ReviewItem {
+  id: number;
+  body: string | null;
+  score: number;
+  userName: string | null;
+  storeName: string | null;
+}
+
+export const responseFromReviews = (reviews: ReviewItem[]): ReviewListResponse => {
+  const lastReview = reviews[reviews.length - 1];
+
+  return {
+    data: reviews,
+    pagination: {
+      cursor: lastReview ? lastReview.id : null,
+    },
+  };
+};
+
+export interface ReviewListResponse {
+  data: ReviewItem[];
+  pagination: {
+    cursor: number | null;
+  };
+}
