@@ -35,8 +35,19 @@ export const getAllStoreReviews = async (store_id: number, cursor: number) => {
     select: {
       id: true,
       body: true,
-      store: true,
-      member: true,
+      score: true,
+      member: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      store: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
     where: {
       storeId: store_id,
@@ -59,8 +70,19 @@ export const getMyReviews = async (memberId: number, cursor: number) => {
     select: {
       id: true,
       body: true,
-      store: true,
-      member: true,
+      score: true,
+      member: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      store: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
     where: {
       memberId,

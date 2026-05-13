@@ -36,6 +36,9 @@ export const reviewResponse = (body: IReviewResponse) => {
 export interface ReviewItem {
   id: number;
   body: string | null;
+  score: number;
+  userName: string | null;
+  storeName: string | null;
 }
 
 export const responseFromReviews = (reviews: ReviewItem[]): ReviewListResponse => {

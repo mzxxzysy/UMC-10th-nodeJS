@@ -37,6 +37,9 @@ export const listStoreReviews = async (storeId: number, cursor: number): Promise
   const mapped = reviews.map((r) => ({
     id: Number(r.id),
     body: r.body,
+    score: Number(r.score),
+    userName: r.member?.name || null,
+    storeName: r.store?.name || null,
   }));
 
   return responseFromReviews(mapped);
@@ -49,6 +52,9 @@ export const handleMyReviews = async (memberId: number, cursor: number): Promise
   const mapped = reviews.map((r) => ({
     id: Number(r.id),
     body: r.body,
+    score: Number(r.score),
+    userName: r.member?.name || null,
+    storeName: r.store?.name || null,
   }));
 
   return responseFromReviews(mapped);
