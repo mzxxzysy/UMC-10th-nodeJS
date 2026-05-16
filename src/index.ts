@@ -1,10 +1,11 @@
 import dotenv from "dotenv";
-import { Express, Request, Response } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { RegisterRoutes } from "./generated/routes.js";
+import { AppError } from "./common/errors/app.error.js";
 // import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
 import { handleAddStore } from "./modules/stores/controllers/store.controller.js";
 import { handleAddReview, handleListMyReviews, handleListStoreReviews } from "./modules/reviews/controllers/review.controller.js";
@@ -18,6 +19,17 @@ const app = express();
 app.use(morgan("dev"));
 app.use(cookieParser());
 const port = process.env.PORT || 3000;
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.error = function ({ errorCode = null, message = null, data = null }) {
+    return this.json({
+      resultType: "FAILED",
+      error: { errorCode, message, data },
+      data: null,
+    });
+  };
+  next();
+});
 
 // 2. 미들웨어 설정
 app.use(cors()); // cors 방식 허용
@@ -45,6 +57,19 @@ app.get("/api/v1/reviews/:memberId", handleListMyReviews); // 내가 작성한 �
 app.get("/api/v1/stores/:storeId/missions", handleListStoreMissions); // 특정 가게의 미션 목록 조회
 app.get("/api/v1/members/:memberId/missions", handleListChallenge); // 내가 진행 중인 미션 목록 조회
 app.patch("/api/v1/members/:missionId", handleCompleteMission); // 내가 진행 중인 미션을 진행 완료로 바꾸기
+
+// 전역 오류를 처리하기 위한 미들웨어
+app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  res.status(err.statusCode || 500).error({
+    errorCode: err.errorCode || "unknown",
+    message: err.message || null,
+    data: err.data || null,
+  });
+});
 
 // 4. 서버 시작
 app.listen(port, () => {

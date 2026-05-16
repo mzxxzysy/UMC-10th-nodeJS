@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Middlewares, Post, Request, Res, Route, Tags } from "tsoa";
 import { UserSignUpRequest, UserSignUpResponse } from "../dtos/user.dto.js";
 import { userSignUp } from "../services/user.service.js";
-// import { ApiResponse, success } from "../../../common/responses/response";
+import { ApiResponse, success } from "../../../common/responses/response.js";
 import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
 import { Request as ExpressRequest } from "express";
 
@@ -9,11 +9,11 @@ import { Request as ExpressRequest } from "express";
 @Tags("Users") // Swagger 태그
 export class UserController extends Controller {
   @Post("signup") // 엔드포인드 정의
-  public async handleUserSignUp(@Body() body: UserSignUpRequest): Promise<UserSignUpResponse> {
+  public async handleUserSignUp(@Body() body: UserSignUpRequest): Promise<ApiResponse<UserSignUpResponse>> {
     console.log("회원가입을 요청했습니다!");
     console.log("body:", body);
     const user = await userSignUp(body); //서비스 로직 호출
-    return user; //성공 응답 보내기
+    return success(user); //성공 응답 보내기
   }
   @Get("guest")
   public async handleGuestPage(): Promise<String> {
