@@ -17,7 +17,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "http-status-codes": "^2.3.0"
+    "http-status-codes": "^2.3.0",
+    "tsoa": "^7.0.0-alpha.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

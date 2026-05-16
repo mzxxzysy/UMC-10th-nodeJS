@@ -33,21 +33,14 @@ export const handleMyChallenge = async (memberId: number, cursor: number) => {
 
   const mapped = challenges.map((c) => ({
     challengeId: Number(c.id),
-
     status: c.status || "",
-
     mission: {
       missionId: Number(c.mission?.id),
-
       reward: c.mission?.reward || 0,
-
       deadline: c.mission?.deadline?.toISOString(),
-
       missionSpec: c.mission?.mission_spec || "",
-
       store: {
         storeId: Number(c.mission?.store?.id),
-
         name: c.mission?.store?.name || "",
       },
     },
