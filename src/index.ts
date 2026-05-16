@@ -1,7 +1,8 @@
 import dotenv from "dotenv";
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
-import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
+import { RegisterRoutes } from "./generated/routes.js";
+// import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
 import { handleAddStore } from "./modules/stores/controllers/store.controller.js";
 import { handleAddReview, handleListMyReviews, handleListStoreReviews } from "./modules/reviews/controllers/review.controller.js";
 import { handleAddMission, handleListStoreMissions } from "./modules/missions/controllers/mission.controller.js";
@@ -19,12 +20,17 @@ app.use(express.static("public")); // 정적 파일 접근
 app.use(express.json()); // request의 본문을 json으로 해석할 수 있도록 함(JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
 
+// Express.js에 생성한 엔드 포인트들을 register
+const router = express.Router();
+RegisterRoutes(router);
+app.use("/api/v1", router);
+
 // 3. 기본 라우트
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World! This is TypeScript Server!");
 });
 
-app.post("/api/v1/users/signup", handleUserSignUp); // 회원가입
+// app.post("/api/v1/users/signup", handleUserSignUp); // 회원가입
 app.post("/api/v1/stores", handleAddStore); // 특정 지역에 가게 추가하기
 app.post("/api/v1/reviews", handleAddReview); // 가게에 리뷰 추가하기
 app.post("/api/v1/missions", handleAddMission); // 가게에 미션 추가하기

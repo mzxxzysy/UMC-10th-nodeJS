@@ -18,7 +18,6 @@ export const addUser = async (data: any) => {
       address: data.address,
       spec_address: data.detailAddress,
       phone_num: data.phoneNumber,
-      preferences: data.preferences,
     },
   });
 
