@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
-import express, { Express, Request, Response } from "express";
+import { Express, Request, Response } from "express";
+import express from "express";
+import morgan from "morgan";
 import cors from "cors";
 import { RegisterRoutes } from "./generated/routes.js";
 // import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
@@ -11,7 +13,8 @@ import { handleChallengeMission, handleCompleteMission, handleListChallenge } fr
 // 1. 환경 변수 설정
 dotenv.config();
 
-const app: Express = express();
+const app = express();
+app.use(morgan("dev"));
 const port = process.env.PORT || 3000;
 
 // 2. 미들웨어 설정
