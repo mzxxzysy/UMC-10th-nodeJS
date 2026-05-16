@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { Express, Request, Response } from "express";
+import cookieParser from "cookie-parser";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
@@ -15,6 +16,7 @@ dotenv.config();
 
 const app = express();
 app.use(morgan("dev"));
+app.use(cookieParser());
 const port = process.env.PORT || 3000;
 
 // 2. 미들웨어 설정
