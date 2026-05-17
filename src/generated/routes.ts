@@ -5,6 +5,8 @@ import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../modules/users/controllers/user.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { StoreController } from './../modules/stores/controllers/store.controller';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
 
@@ -42,6 +44,27 @@ const models: TsoaRoute.Models = {
             "detailAddress": {"dataType":"string"},
             "phoneNumber": {"dataType":"string","required":true},
             "preferences": {"dataType":"array","array":{"dataType":"double"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IStoreResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "regionId": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "score": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IAddStoreRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "regionId": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -230,6 +253,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'handleSetLogout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStoreController_handleAddStore: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"IAddStoreRequest"},
+        };
+        app.post('/stores',
+            ...(fetchMiddlewares<RequestHandler>(StoreController)),
+            ...(fetchMiddlewares<RequestHandler>(StoreController.prototype.handleAddStore)),
+
+            async function StoreController_handleAddStore(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStoreController_handleAddStore, request, response });
+
+                const controller = new StoreController();
+
+              await templateService.apiHandler({
+                methodName: 'handleAddStore',
                 controller,
                 response,
                 next,
