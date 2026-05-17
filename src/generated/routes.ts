@@ -9,6 +9,8 @@ import { UserController } from './../modules/users/controllers/user.controller';
 import { StoreController } from './../modules/stores/controllers/store.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ReviewController } from './../modules/reviews/controllers/review.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MissionController } from './../modules/missions/controllers/mission.controller';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
 
@@ -170,6 +172,61 @@ const models: TsoaRoute.Models = {
             "storeId": {"dataType":"double","required":true},
             "body": {"dataType":"string","required":true},
             "score": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_IMissionResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "data": {"ref":"IMissionResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IAddMissionRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "storeId": {"dataType":"double","required":true},
+            "reward": {"dataType":"double","required":true},
+            "deadline": {"dataType":"string","required":true},
+            "missionSpec": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionStatus": {
+        "dataType": "refEnum",
+        "enums": ["진행중","진행완료"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IChallengeResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "memberId": {"dataType":"double","required":true},
+            "missionId": {"dataType":"double","required":true},
+            "status": {"ref":"MissionStatus","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_IChallengeResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "data": {"ref":"IChallengeResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IChallengeRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "memberId": {"dataType":"double","required":true},
+            "missionId": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -511,6 +568,66 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'handleListMyReviews',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionController_handleAddMission: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"IAddMissionRequest"},
+        };
+        app.post('/missions',
+            ...(fetchMiddlewares<RequestHandler>(MissionController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionController.prototype.handleAddMission)),
+
+            async function MissionController_handleAddMission(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionController_handleAddMission, request, response });
+
+                const controller = new MissionController();
+
+              await templateService.apiHandler({
+                methodName: 'handleAddMission',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionController_handleChallengeMission: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"IChallengeRequest"},
+        };
+        app.post('/missions/challenge',
+            ...(fetchMiddlewares<RequestHandler>(MissionController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionController.prototype.handleChallengeMission)),
+
+            async function MissionController_handleChallengeMission(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionController_handleChallengeMission, request, response });
+
+                const controller = new MissionController();
+
+              await templateService.apiHandler({
+                methodName: 'handleChallengeMission',
                 controller,
                 response,
                 next,
