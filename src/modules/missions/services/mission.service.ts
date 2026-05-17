@@ -1,4 +1,4 @@
-import { challengesResponse, MissionStatus } from "../dtos/challenge.dto.js";
+import { MissionStatus } from "../dtos/challenge.dto.js";
 import { IAddMissionRequest, IChallengeRequest, IMissionResponse } from "../dtos/mission.dto.js";
 import { addMission, challengeMission, getChallenge, getMission } from "../repositories/mission.repository.js";
 

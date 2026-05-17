@@ -1,8 +1,8 @@
-import { challengesResponse, completeMissionResponse, MissionStatus } from "../dtos/challenge.dto.js";
+import { IChallengesResponse, ICompleteMissionResponse, MissionStatus } from "../dtos/challenge.dto.js";
 import { getMyChallenges, updateMissionStatus } from "../repositories/challenge.repository.js";
 
 // 내가 진행 중인 미션 목록 조회
-export const handleMyChallenge = async (memberId: number, cursor: number) => {
+export const handleMyChallenge = async (memberId: number, cursor: number): Promise<IChallengesResponse> => {
   const challenges = await getMyChallenges(memberId, cursor);
 
   const mapped = challenges.map((c) => ({
@@ -20,16 +20,17 @@ export const handleMyChallenge = async (memberId: number, cursor: number) => {
     },
   }));
 
-  return challengesResponse(mapped);
+  return {
+    data: mapped,
+    pagination: {
+      cursor: mapped.at(-1)?.challengeId ?? null,
+    },
+  };
 };
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기
-export const completeMission = async (memberMissionId: number) => {
+export const completeMission = async (memberMissionId: number): Promise<ICompleteMissionResponse> => {
   const mission = await updateMissionStatus(memberMissionId);
 
-  return completeMissionResponse({
-    challengeId: Number(mission.id),
-
-    status: mission.status as MissionStatus,
-  });
+  return { challengeId: Number(mission.id), status: mission.status as MissionStatus };
 };
