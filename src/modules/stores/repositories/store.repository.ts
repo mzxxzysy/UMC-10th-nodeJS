@@ -25,3 +25,62 @@ export const getStore = async (storeId: number) => {
 
   return store;
 };
+
+// 가게 리뷰 목록 조회
+export const getAllStoreReviews = async (store_id: number, cursor: number) => {
+  const reviews = await prisma.review.findMany({
+    select: {
+      id: true,
+      body: true,
+      score: true,
+      member: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      store: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    where: {
+      storeId: store_id,
+      id: {
+        gt: cursor,
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+    take: 5,
+  });
+
+  return reviews;
+};
+
+// 특정 가게의 미션 목록 조회
+export const getStoreMissions = async (store_id: number, cursor: number) => {
+  const missions = await prisma.mission.findMany({
+    select: {
+      id: true,
+      reward: true,
+      deadline: true,
+      mission_spec: true,
+    },
+    where: {
+      store_id,
+      id: {
+        gt: cursor,
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+    take: 5,
+  });
+
+  return missions;
+};

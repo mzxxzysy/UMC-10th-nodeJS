@@ -30,30 +30,3 @@ export const missionResponse = (body: IMissionResponse) => {
     missionSpec: body.missionSpec,
   };
 };
-
-// 미션 목록 조회
-export interface missionItem {
-  id: number;
-  storeId: number;
-  reward: number;
-  deadline?: string;
-  missionSpec: string;
-}
-
-export const responseMissions = (missions: missionItem[]): MissionsListResponse => {
-  const lastMission = missions[missions.length - 1];
-
-  return {
-    data: missions,
-    pagination: {
-      cursor: lastMission ? lastMission.id : null,
-    },
-  };
-};
-
-export interface MissionsListResponse {
-  data: IMissionResponse[];
-  pagination: {
-    cursor: number | null;
-  };
-}
