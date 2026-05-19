@@ -1,3 +1,4 @@
+import { AlreadyChallengedMissionError, NotExistedMissionError } from "../../../common/errors/error.js";
 import { MissionStatus } from "../dtos/challenge.dto.js";
 import { IAddMissionRequest, IChallengeRequest, IMissionResponse } from "../dtos/mission.dto.js";
 import { addMission, challengeMission, getChallenge, getMission } from "../repositories/mission.repository.js";
@@ -14,7 +15,7 @@ export const addStoreMission = async (data: IAddMissionRequest): Promise<IMissio
   const mission = await getMission(Number(missionId));
 
   if (!mission) {
-    throw new Error("미션 찾을 수 없습니다.");
+    throw new NotExistedMissionError("미션 찾을 수 없습니다.", data);
   }
   return {
     storeId: Number(mission.store_id),
@@ -30,7 +31,7 @@ export const challengeStoreMission = async (data: IChallengeRequest) => {
   const mission = await getChallenge(Number(data.missionId));
 
   if (!mission) {
-    throw new Error("미션 찾을 수 없습니다.");
+    throw new NotExistedMissionError("미션 찾을 수 없습니다.", data);
   }
 
   const challengeId = await challengeMission({
@@ -40,7 +41,7 @@ export const challengeStoreMission = async (data: IChallengeRequest) => {
 
   // 이미 도전 중인 미션인지 확인
   if (challengeId === null) {
-    throw new Error("이미 진행 중인 미션입니다.");
+    throw new AlreadyChallengedMissionError("이미 진행 중인 미션입니다.");
   }
 
   return {

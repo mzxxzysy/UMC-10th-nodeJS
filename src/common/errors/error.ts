@@ -1,3 +1,4 @@
+import { appendFile } from "node:fs";
 import { AppError } from "./app.error.js";
 
 // 이미 가입된 이메일 에러
@@ -41,6 +42,30 @@ export class NotExistedReviewError extends AppError {
   constructor(message: string, data?: unknown) {
     super({
       errorCode: "R001",
+      statusCode: 404,
+      message,
+      data,
+    });
+  }
+}
+
+// 존재하지 않는 미션 에러
+export class NotExistedMissionError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "M001",
+      statusCode: 404,
+      message,
+      data,
+    });
+  }
+}
+
+// 이미 도전 중인 미션 에러
+export class AlreadyChallengedMissionError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "M002",
       statusCode: 404,
       message,
       data,
