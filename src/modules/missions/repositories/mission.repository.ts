@@ -24,11 +24,18 @@ export const getMission = async (missionId: number) => {
 
 // 미션 도전하기
 export const challengeMission = async (data: any) => {
+  // 이미 완료한 미션인지 확인
+  const complete = await prisma.member_mission.findFirst({
+    where: { member_id: data.memberId, mission_id: data.missionId, status: MissionStatus.COMPLETED },
+  });
+  if (complete) {
+    return -1;
+  }
   // 이미 도전 중인지 확인
-  const confirm = await prisma.member_mission.findFirst({ where: { member_id: data.memberId, mission_id: data.missionId } });
+  const confirm = await prisma.member_mission.findFirst({ where: { member_id: data.memberId, mission_id: data.missionId, status: MissionStatus.IN_PROGRESS } });
 
   if (confirm) {
-    return null;
+    return -2;
   }
 
   // 미션 도전하기

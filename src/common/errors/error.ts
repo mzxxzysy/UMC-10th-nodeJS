@@ -72,3 +72,15 @@ export class AlreadyChallengedMissionError extends AppError {
     });
   }
 }
+
+// 이미 완료한 미션 에러
+export class AlreadyCompletedMissionError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "M003",
+      statusCode: 404,
+      message,
+      data,
+    });
+  }
+}
