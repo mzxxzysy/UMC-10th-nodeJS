@@ -1,3 +1,4 @@
+import { NotExistedStoreError } from "../../../common/errors/error.js";
 import { IAddReviewRequest, IReviewResponse } from "../dtos/review.dto.js";
 import { addReview, getMyReviews, getReview } from "../repositories/review.repository.js";
 
@@ -12,7 +13,7 @@ export const addStoreReview = async (data: IAddReviewRequest): Promise<IReviewRe
 
   // 존재하는 가게인지 검증
   if (reviewId === null) {
-    throw new Error("해당 가게가 존재하지 않습니다.");
+    throw new NotExistedStoreError("해당 가게가 존재하지 않습니다.");
   }
 
   // 등록된 리뷰 조회

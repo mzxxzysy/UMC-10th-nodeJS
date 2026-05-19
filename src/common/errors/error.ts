@@ -35,3 +35,15 @@ export class NotExistedStoreError extends AppError {
     });
   }
 }
+
+// 존재하지 않는 리뷰 에러
+export class NotExistedReviewError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "R001",
+      statusCode: 404,
+      message,
+      data,
+    });
+  }
+}
