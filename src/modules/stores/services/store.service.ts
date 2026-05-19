@@ -1,6 +1,8 @@
+import { AlreadyRegisterStoreError, NotExistedStoreError } from "../../../common/errors/error.js";
 import { IAddStoreRequest, IStoreResponse, ReviewListResponse } from "../dtos/store.dto.js";
 import { addStore, getAllStoreReviews, getStore, getStoreMissions } from "../repositories/store.repository.js";
 
+// 특정 지역에 가게 추가하기
 export const addRegionStore = async (data: IAddStoreRequest): Promise<IStoreResponse> => {
   const storeId = await addStore({
     regionId: data.regionId,
@@ -9,13 +11,13 @@ export const addRegionStore = async (data: IAddStoreRequest): Promise<IStoreResp
   });
 
   if (storeId === null) {
-    throw new Error("이미 등록된 가게입니다.");
+    throw new AlreadyRegisterStoreError("이미 등록된 가게입니다.");
   }
 
   const store = await getStore(Number(storeId));
 
   if (!store) {
-    throw new Error("가게 찾을 수 없습니다.");
+    throw new NotExistedStoreError("가게 찾을 수 없습니다.");
   }
   return {
     regionId: Number(store.region_id),
