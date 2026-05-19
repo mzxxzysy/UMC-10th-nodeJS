@@ -1,68 +1,36 @@
-import { challengeResponse, challengesResponse, completeMissionResponse, IChallengeRequest, MissionStatus } from "../dtos/challenge.dto.js";
-import { challengeMission, getChallenge, getMyChallenges, updateMissionStatus } from "../repositories/challenge.repository.js";
-
-//미션 도전하기
-export const challengeStoreMission = async (data: IChallengeRequest) => {
-  const challengeId = await challengeMission({
-    memberId: data.memberId,
-    missionId: data.missionId,
-  });
-
-  // 이미 도전 중인 미션인지 확인
-  if (challengeId === null) {
-    throw new Error("이미 진행 중인 미션입니다.");
-  }
-
-  // 도전한 미션 조회
-  const mission = await getChallenge(Number(challengeId));
-
-  if (!mission) {
-    throw new Error("미션 찾을 수 없습니다.");
-  }
-
-  return challengeResponse({
-    memberId: Number(mission.member_id),
-    missionId: Number(mission.mission_id),
-    status: MissionStatus.IN_PROGRESS,
-  });
-};
+import { IChallengesResponse, ICompleteMissionResponse, MissionStatus } from "../dtos/challenge.dto.js";
+import { getMyChallenges, updateMissionStatus } from "../repositories/challenge.repository.js";
 
 // 내가 진행 중인 미션 목록 조회
-export const handleMyChallenge = async (memberId: number, cursor: number) => {
+export const handleMyChallenge = async (memberId: number, cursor: number): Promise<IChallengesResponse> => {
   const challenges = await getMyChallenges(memberId, cursor);
 
   const mapped = challenges.map((c) => ({
     challengeId: Number(c.id),
-
     status: c.status || "",
-
     mission: {
       missionId: Number(c.mission?.id),
-
       reward: c.mission?.reward || 0,
-
       deadline: c.mission?.deadline?.toISOString(),
-
       missionSpec: c.mission?.mission_spec || "",
-
       store: {
         storeId: Number(c.mission?.store?.id),
-
         name: c.mission?.store?.name || "",
       },
     },
   }));
 
-  return challengesResponse(mapped);
+  return {
+    data: mapped,
+    pagination: {
+      cursor: mapped.at(-1)?.challengeId ?? null,
+    },
+  };
 };
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기
-export const completeMission = async (memberMissionId: number) => {
+export const completeMission = async (memberMissionId: number): Promise<ICompleteMissionResponse> => {
   const mission = await updateMissionStatus(memberMissionId);
 
-  return completeMissionResponse({
-    challengeId: Number(mission.id),
-
-    status: mission.status as MissionStatus,
-  });
+  return { challengeId: Number(mission.id), status: mission.status as MissionStatus };
 };

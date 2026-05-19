@@ -1,3 +1,5 @@
+import { MissionStatus } from "./challenge.dto.js";
+
 // 가게에 미션 추가하기
 export interface IAddMissionRequest {
   storeId: number;
@@ -6,15 +8,6 @@ export interface IAddMissionRequest {
   missionSpec: string;
 }
 
-export const addMissionRequest = (body: IAddMissionRequest) => {
-  return {
-    storeId: body.storeId,
-    reward: body.reward,
-    deadline: body.deadline,
-    missionSpec: body.missionSpec,
-  };
-};
-
 export interface IMissionResponse {
   storeId: number;
   reward: number;
@@ -22,38 +15,15 @@ export interface IMissionResponse {
   missionSpec: string;
 }
 
-export const missionResponse = (body: IMissionResponse) => {
-  return {
-    storeId: body.storeId,
-    reward: body.reward,
-    deadline: body.deadline || new Date(),
-    missionSpec: body.missionSpec,
-  };
-};
-
-// 미션 목록 조회
-export interface missionItem {
-  id: number;
-  storeId: number;
-  reward: number;
-  deadline?: string;
-  missionSpec: string;
+// 미션 도전하기
+export interface IChallengeRequest {
+  memberId: number;
+  missionId: number;
 }
 
-export const responseMissions = (missions: missionItem[]): MissionsListResponse => {
-  const lastMission = missions[missions.length - 1];
-
-  return {
-    data: missions,
-    pagination: {
-      cursor: lastMission ? lastMission.id : null,
-    },
-  };
-};
-
-export interface MissionsListResponse {
-  data: IMissionResponse[];
-  pagination: {
-    cursor: number | null;
-  };
+// 미션 조회하기
+export interface IChallengeResponse {
+  memberId: number;
+  missionId: number;
+  status: MissionStatus;
 }

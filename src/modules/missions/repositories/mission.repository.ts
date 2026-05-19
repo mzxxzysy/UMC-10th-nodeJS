@@ -1,4 +1,5 @@
 import { prisma } from "../../../db.config.js";
+import { MissionStatus } from "../dtos/challenge.dto.js";
 
 // 가게에 미션 추가하기
 export const addMission = async (data: any) => {
@@ -21,26 +22,37 @@ export const getMission = async (missionId: number) => {
   return mission;
 };
 
-// 특정 가게의 미션 목록 조회
-export const getStoreMissions = async (store_id: number, cursor: number) => {
-  const missions = await prisma.mission.findMany({
-    select: {
-      id: true,
-      reward: true,
-      deadline: true,
-      mission_spec: true,
+// 미션 도전하기
+export const challengeMission = async (data: any) => {
+  // 이미 완료한 미션인지 확인
+  const complete = await prisma.member_mission.findFirst({
+    where: { member_id: data.memberId, mission_id: data.missionId, status: MissionStatus.COMPLETED },
+  });
+  if (complete) {
+    return -1;
+  }
+  // 이미 도전 중인지 확인
+  const confirm = await prisma.member_mission.findFirst({ where: { member_id: data.memberId, mission_id: data.missionId, status: MissionStatus.IN_PROGRESS } });
+
+  if (confirm) {
+    return -2;
+  }
+
+  // 미션 도전하기
+  const challenge = await prisma.member_mission.create({
+    data: {
+      member_id: data.memberId,
+      mission_id: data.missionId,
+      status: MissionStatus.IN_PROGRESS,
     },
-    where: {
-      store_id,
-      id: {
-        gt: cursor,
-      },
-    },
-    orderBy: {
-      id: "asc",
-    },
-    take: 5,
   });
 
-  return missions;
+  return challenge.id;
+};
+
+// 도전 중인 미션 개별조회
+export const getChallenge = async (challengeId: number) => {
+  const challenge = await prisma.member_mission.findUnique({ where: { id: challengeId } });
+
+  return challenge;
 };

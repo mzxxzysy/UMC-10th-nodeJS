@@ -1,17 +1,11 @@
+import { IMissionResponse } from "../../missions/dtos/mission.dto.js";
+
 // 특정 지역에 가게 추가 dto
 export interface IAddStoreRequest {
   regionId: number;
   name: string;
   address: string;
 }
-
-export const addStoreRequest = (body: IAddStoreRequest) => {
-  return {
-    regionId: body.regionId,
-    name: body.name,
-    address: body.address,
-  };
-};
 
 // 가게 정보 dto
 export interface IStoreResponse {
@@ -21,11 +15,34 @@ export interface IStoreResponse {
   score?: number;
 }
 
-export const storeResponse = (body: IStoreResponse) => {
-  return {
-    regionId: body.regionId,
-    name: body.name,
-    address: body.address,
-    score: body.score || 0,
+// 리뷰 목록 조회
+export interface ReviewItem {
+  id: number;
+  body: string | null;
+  score: number;
+  userName: string | null;
+  storeName: string | null;
+}
+
+export interface ReviewListResponse {
+  data: ReviewItem[];
+  pagination: {
+    cursor: number | null;
   };
-};
+}
+
+// 미션 목록 조회
+export interface missionItem {
+  id: number;
+  storeId: number;
+  reward: number;
+  deadline?: string;
+  missionSpec: string;
+}
+
+export interface MissionsListResponse {
+  data: IMissionResponse[];
+  pagination: {
+    cursor: number | null;
+  };
+}
