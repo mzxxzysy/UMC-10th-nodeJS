@@ -26,7 +26,7 @@ export class ReviewController extends Controller {
    * @summary 내가 작성한 리뷰를 조회하는 엔드포인트입니다.
    */
   @Get("{memberId}")
-  @Response<ApiResponse<ReviewListResponse>>(200, "리뷰 등록 성공")
+  @Response<ApiResponse<ReviewListResponse>>(200, "리뷰 조회 성공")
   public async handleListMyReviews(@Path() memberId: number, @Query() cursor: number = 0): Promise<ApiResponse<ReviewListResponse>> {
     const myReview = await handleMyReviews(memberId, cursor);
     return success(myReview);
