@@ -1,6 +1,5 @@
 // 리뷰 작성하기
 export interface IAddReviewRequest {
-  memberId: number;
   storeId: number;
   body: string;
   score: number;

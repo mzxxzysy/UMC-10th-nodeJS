@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import passport from "passport";
 
 export function authorizeUser() {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -13,3 +14,8 @@ export function authorizeUser() {
     }
   };
 }
+
+// JWT 인증
+export const isLogin = passport.authenticate("jwt", {
+  session: false,
+});

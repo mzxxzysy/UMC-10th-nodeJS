@@ -29,8 +29,8 @@ export const handleMyChallenge = async (memberId: number, cursor: number): Promi
 };
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기
-export const completeMission = async (memberMissionId: number): Promise<ICompleteMissionResponse> => {
-  const mission = await updateMissionStatus(memberMissionId);
+export const completeMission = async (memberMissionId: number, memberId: number): Promise<ICompleteMissionResponse> => {
+  const mission = await updateMissionStatus(memberMissionId, memberId);
 
   return { challengeId: Number(mission.id), status: mission.status as MissionStatus };
 };

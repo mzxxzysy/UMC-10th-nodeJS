@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Middlewares, Post, Request, Res, Route, Tags, Response } from "tsoa";
-import { UserSignUpRequest, UserSignUpResponse } from "../dtos/user.dto.js";
-import { userSignUp } from "../services/user.service.js";
+import { Body, Controller, Get, Middlewares, Post, Request, Res, Route, Tags, Response, Patch } from "tsoa";
+import { UserRequest, UserSignUpResponse } from "../dtos/user.dto.js";
+import { updateUser, userSignUp } from "../services/user.service.js";
 import { ApiResponse, success } from "../../../common/responses/response.js";
-import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
+import { authorizeUser, isLogin } from "../../../common/middlewares/auth.middleware.js";
 import { Request as ExpressRequest } from "express";
 
 @Route("users") // 라우트 경로
@@ -15,7 +15,7 @@ export class UserController extends Controller {
   @Post("signup") // 엔드포인드 정의
   @Response<ApiResponse<UserSignUpResponse>>(200, "회원가입 성공")
   @Response<ApiResponse<null>>(400, "중복된 이메일 에러")
-  public async handleUserSignUp(@Body() body: UserSignUpRequest): Promise<ApiResponse<UserSignUpResponse>> {
+  public async handleUserSignUp(@Body() body: UserRequest): Promise<ApiResponse<UserSignUpResponse>> {
     console.log("회원가입을 요청했습니다!");
     console.log("body:", body);
     const user = await userSignUp(body); //서비스 로직 호출
@@ -36,7 +36,7 @@ export class UserController extends Controller {
     return "<h1>로그인 페이지</h1><p>로그인이 필요한 페이지에서 튕겨나오면 여기로 옵니다.</p>";
   }
   @Get("mypage")
-  @Middlewares(authorizeUser())
+  @Middlewares(isLogin)
   public async handleMypage(@Request() req: ExpressRequest): Promise<String> {
     return `
             <h1>마이페이지</h1>
@@ -53,5 +53,15 @@ export class UserController extends Controller {
   public async handleSetLogout(@Request() req: ExpressRequest): Promise<String> {
     req.res!.clearCookie("username");
     return '로그아웃 완료 (쿠키 삭제). <a href="/api/v1/users/guest">메인으로</a>';
+  }
+
+  // 회원정보 수정
+  @Patch("me")
+  @Middlewares(isLogin)
+  public async updateMyInfo(@Request() req: ExpressRequest, @Body() body: UserRequest) {
+    const user = req.user as any;
+    const result = await updateUser(Number(user.id), body);
+
+    return success(result);
   }
 }

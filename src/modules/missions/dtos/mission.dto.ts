@@ -17,13 +17,11 @@ export interface IMissionResponse {
 
 // 미션 도전하기
 export interface IChallengeRequest {
-  memberId: number;
   missionId: number;
 }
 
 // 미션 조회하기
 export interface IChallengeResponse {
-  memberId: number;
   missionId: number;
   status: MissionStatus;
 }
