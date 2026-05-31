@@ -28,7 +28,7 @@ const googleVerify = async (profile: Profile) => {
         email,
         name: profile.displayName,
         gender: "추후 수정",
-        age: 0,
+        birth: null,
         address: "추후 수정",
         spec_address: "추후 수정",
         phone_num: "추후 수정",

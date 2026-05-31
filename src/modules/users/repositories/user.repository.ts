@@ -1,4 +1,5 @@
 import { prisma } from "../../../db.config.js";
+import { UserRequest } from "../dtos/user.dto.js";
 
 // User 데이터 삽입
 export const addUser = async (data: any) => {
@@ -47,5 +48,21 @@ export const getUserPreferencesByUserId = async (userId: number) => {
       food_category: true, // 💡 핵심: JOIN 대신 include를 써서 연관 데이터를 가져옵니다!
     },
     orderBy: { category_id: "asc" },
+  });
+};
+
+// 회원 정보 수정
+export const updateUserInfo = async (memberId: number, data: UserRequest) => {
+  return await prisma.member.update({
+    where: {
+      id: BigInt(memberId),
+    },
+    data: {
+      name: data.name,
+      gender: data.gender,
+      birth: data.birth,
+      address: data.address,
+      phone_num: data.phoneNumber,
+    },
   });
 };
