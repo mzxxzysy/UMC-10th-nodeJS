@@ -13,6 +13,7 @@ export class MissionController extends Controller {
    * @summary 가게에 미션을 추가하는 엔드포인트입니다.
    */
   @Post("")
+  @Middlewares(isLogin)
   @Response<ApiResponse<IMissionResponse>>(200, "미션 추가 성공")
   public async handleAddMission(@Body() body: IAddMissionRequest): Promise<ApiResponse<IMissionResponse>> {
     console.log("가게 미션 추가를 요청했습니다.");

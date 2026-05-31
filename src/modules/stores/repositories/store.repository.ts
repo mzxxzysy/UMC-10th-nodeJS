@@ -2,6 +2,16 @@ import { prisma } from "../../../db.config.js";
 
 // 특정 지역에 가게 추가하기
 export const addStore = async (data: any) => {
+  const region = await prisma.region.findUnique({
+    where: {
+      id: data.regionId,
+    },
+  });
+
+  if (!region) {
+    throw new Error("존재하지 않는 지역입니다.");
+  }
+
   const store = await prisma.store.findFirst({ where: { name: data.name, region_id: data.regionId } });
 
   if (store) {
