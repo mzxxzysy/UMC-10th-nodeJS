@@ -26,7 +26,7 @@ export const addStoreMission = async (data: IAddMissionRequest): Promise<IMissio
 };
 
 // 미션 도전하기
-export const challengeStoreMission = async (data: IChallengeRequest) => {
+export const challengeStoreMission = async (data: IChallengeRequest, userId: number) => {
   // 도전한 미션 조회
   const mission = await getMission(Number(data.missionId));
 
@@ -35,7 +35,7 @@ export const challengeStoreMission = async (data: IChallengeRequest) => {
   }
 
   const challengeId = await challengeMission({
-    memberId: data.memberId,
+    memberId: userId,
     missionId: data.missionId,
   });
 

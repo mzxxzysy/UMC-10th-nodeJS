@@ -216,7 +216,6 @@ const models: TsoaRoute.Models = {
     "IChallengeResponse": {
         "dataType": "refObject",
         "properties": {
-            "memberId": {"dataType":"double","required":true},
             "missionId": {"dataType":"double","required":true},
             "status": {"ref":"MissionStatus","required":true},
         },
@@ -236,7 +235,6 @@ const models: TsoaRoute.Models = {
     "IChallengeRequest": {
         "dataType": "refObject",
         "properties": {
-            "memberId": {"dataType":"double","required":true},
             "missionId": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
@@ -670,6 +668,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMissionController_handleChallengeMission: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 body: {"in":"body","name":"body","required":true,"ref":"IChallengeRequest"},
         };
         app.post('/missions/challenge',
@@ -700,10 +699,10 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsChallengeController_handleListChallenge: Record<string, TsoaRoute.ParameterSchema> = {
-                memberId: {"in":"path","name":"memberId","required":true,"dataType":"double"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 cursor: {"default":0,"in":"query","name":"cursor","dataType":"double"},
         };
-        app.get('/challenges/:memberId/missions',
+        app.get('/challenges/me/missions',
             ...(fetchMiddlewares<RequestHandler>(ChallengeController)),
             ...(fetchMiddlewares<RequestHandler>(ChallengeController.prototype.handleListChallenge)),
 
@@ -731,6 +730,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsChallengeController_handleCompleteMission: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 missionId: {"in":"path","name":"missionId","required":true,"dataType":"double"},
         };
         app.patch('/challenges/:missionId/complete',

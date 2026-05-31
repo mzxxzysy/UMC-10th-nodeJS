@@ -44,7 +44,18 @@ export const getMyChallenges = async (memberId: number, cursor: number) => {
 };
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기
-export const updateMissionStatus = async (memberMissionId: number) => {
+export const updateMissionStatus = async (memberMissionId: number, memberId: number) => {
+  const mission = await prisma.member_mission.findFirst({
+    where: {
+      id: memberMissionId,
+      member_id: memberId,
+    },
+  });
+
+  if (!mission) {
+    throw new Error("본인의 진행 중인 미션이 아닙니다.");
+  }
+
   const updated = await prisma.member_mission.update({
     where: {
       id: memberMissionId,
