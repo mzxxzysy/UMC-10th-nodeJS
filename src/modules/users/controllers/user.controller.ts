@@ -4,6 +4,9 @@ import { userSignUp } from "../services/user.service.js";
 import { ApiResponse, success } from "../../../common/responses/response.js";
 import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
 import { Request as ExpressRequest } from "express";
+import passport from "passport";
+
+const isLogin = passport.authenticate("jwt", { session: false });
 
 @Route("users") // 라우트 경로
 @Tags("Users") // Swagger 태그
@@ -36,7 +39,7 @@ export class UserController extends Controller {
     return "<h1>로그인 페이지</h1><p>로그인이 필요한 페이지에서 튕겨나오면 여기로 옵니다.</p>";
   }
   @Get("mypage")
-  @Middlewares(authorizeUser())
+  @Middlewares(isLogin)
   public async handleMypage(@Request() req: ExpressRequest): Promise<String> {
     return `
             <h1>마이페이지</h1>
