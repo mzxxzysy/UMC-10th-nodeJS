@@ -2,11 +2,8 @@ import { Body, Controller, Get, Middlewares, Post, Request, Res, Route, Tags, Re
 import { UserSignUpRequest, UserSignUpResponse } from "../dtos/user.dto.js";
 import { userSignUp } from "../services/user.service.js";
 import { ApiResponse, success } from "../../../common/responses/response.js";
-import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
+import { authorizeUser, isLogin } from "../../../common/middlewares/auth.middleware.js";
 import { Request as ExpressRequest } from "express";
-import passport from "passport";
-
-const isLogin = passport.authenticate("jwt", { session: false });
 
 @Route("users") // 라우트 경로
 @Tags("Users") // Swagger 태그

@@ -3,9 +3,9 @@ import { IAddReviewRequest, IReviewResponse } from "../dtos/review.dto.js";
 import { addReview, getMyReviews, getReview } from "../repositories/review.repository.js";
 
 // 리뷰 작성하기
-export const addStoreReview = async (data: IAddReviewRequest): Promise<IReviewResponse> => {
+export const addStoreReview = async (data: IAddReviewRequest, memberId: number): Promise<IReviewResponse> => {
   const reviewId = await addReview({
-    memberId: data.memberId,
+    memberId,
     storeId: data.storeId,
     body: data.body,
     score: data.score,

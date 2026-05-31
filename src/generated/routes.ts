@@ -180,7 +180,6 @@ const models: TsoaRoute.Models = {
     "IAddReviewRequest": {
         "dataType": "refObject",
         "properties": {
-            "memberId": {"dataType":"double","required":true},
             "storeId": {"dataType":"double","required":true},
             "body": {"dataType":"string","required":true},
             "score": {"dataType":"double","required":true},
@@ -579,6 +578,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsReviewController_handleAddReview: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 body: {"in":"body","name":"body","required":true,"ref":"IAddReviewRequest"},
         };
         app.post('/reviews',
@@ -609,10 +609,10 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsReviewController_handleListMyReviews: Record<string, TsoaRoute.ParameterSchema> = {
-                memberId: {"in":"path","name":"memberId","required":true,"dataType":"double"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 cursor: {"default":0,"in":"query","name":"cursor","dataType":"double"},
         };
-        app.get('/reviews/:memberId',
+        app.get('/reviews/me',
             ...(fetchMiddlewares<RequestHandler>(ReviewController)),
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.handleListMyReviews)),
 
